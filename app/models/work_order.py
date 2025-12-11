@@ -15,7 +15,7 @@ class WorkOrder(Base):
 
     service_advisor_id = Column(Integer, ForeignKey("users.id"), nullable=True)
 
-    status = Column(String, nullable=False, default="DRAFT")
+    status = Column(String(50), nullable=False, default="DRAFT")
     promised_delivery_datetime = Column(DateTime(timezone=True), nullable=True)
     actual_delivery_datetime = Column(DateTime(timezone=True), nullable=True)
 

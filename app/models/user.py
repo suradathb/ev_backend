@@ -9,13 +9,13 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, unique=True, index=True, nullable=False)
-    password_hash = Column(String, nullable=False)
-    full_name = Column(String, nullable=False)
-    email = Column(String, unique=True, index=True, nullable=True)
-    phone = Column(String, nullable=True)
+    username = Column(String(50), unique=True, index=True, nullable=False)
+    password_hash = Column(String(255), nullable=False)
+    full_name = Column(String(255), nullable=False)
+    email = Column(String(255), unique=True, index=True, nullable=True)
+    phone = Column(String(50), nullable=True)
 
-    role = Column(String, nullable=False, default="SERVICE_ADVISOR")
+    role = Column(String(50), nullable=False, default="SERVICE_ADVISOR")
     branch_id = Column(Integer, ForeignKey("branches.id"), nullable=True)
 
     is_active = Column(Boolean, default=True)

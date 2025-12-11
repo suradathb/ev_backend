@@ -9,11 +9,11 @@ class Customer(Base):
     __tablename__ = "customers"
 
     id = Column(Integer, primary_key=True, index=True)
-    full_name = Column(String, nullable=False)
-    phone = Column(String, nullable=False, index=True)
-    email = Column(String, nullable=True)
-    line_id = Column(String, nullable=True)
-    preferred_contact_channel = Column(String, nullable=True)
+    full_name = Column(String(255), nullable=False)
+    phone = Column(String(50), nullable=False, index=True)
+    email = Column(String(255), nullable=True)
+    line_id = Column(String(100), nullable=True)
+    preferred_contact_channel = Column(String(50), nullable=True)
 
     preferred_branch_id = Column(Integer, ForeignKey("branches.id"), nullable=True)
 

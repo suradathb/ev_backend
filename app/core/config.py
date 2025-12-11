@@ -20,8 +20,13 @@ class Settings:
         os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "1440")
     )
 
-    # ค่า default ใช้ SQLite ไฟล์ ev_service.db ในโฟลเดอร์โปรเจ็กต์
-    DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./ev_service.db")
+    # 🟢 ใช้ MySQL (เชื่อมกับ phpMyAdmin)
+    # แก้ user / password / dbname ให้ตรงกับเครื่องคุณ
+    # ตัวอย่างนี้: user=root, ไม่มี password, database=ev_service_db, host=localhost, port=3306
+    DATABASE_URL: str = os.getenv(
+        "DATABASE_URL",
+        "mysql+pymysql://root:@localhost:3306/ev_service_db",
+    )
 
 
 @lru_cache

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Text
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 
@@ -14,9 +14,9 @@ class Appointment(Base):
     vehicle_id = Column(Integer, ForeignKey("vehicles.id"), nullable=False)
 
     appointment_datetime = Column(DateTime(timezone=True), nullable=False)
-    status = Column(String, nullable=False, default="REQUESTED")
-    service_type = Column(String, nullable=True)
-    notes = Column(String, nullable=True)
+    status = Column(String(50), nullable=False, default="REQUESTED")
+    service_type = Column(String(100), nullable=True)
+    notes = Column(Text, nullable=True)
 
     created_by = Column(Integer, ForeignKey("users.id"), nullable=True)
 

@@ -9,12 +9,12 @@ class Vehicle(Base):
     __tablename__ = "vehicles"
 
     id = Column(Integer, primary_key=True, index=True)
-    vin = Column(String, unique=True, index=True, nullable=True)
-    plate_no = Column(String, index=True, nullable=False)
-    brand = Column(String, nullable=True)
-    model = Column(String, nullable=True)
+    vin = Column(String(64), unique=True, index=True, nullable=True)
+    plate_no = Column(String(20), index=True, nullable=False)
+    brand = Column(String(100), nullable=True)
+    model = Column(String(100), nullable=True)
     model_year = Column(Integer, nullable=True)
-    ev_type = Column(String, nullable=True)  # BEV / PHEV / HEV
+    ev_type = Column(String(20), nullable=True)  # BEV / PHEV / HEV
     battery_capacity_kwh = Column(Integer, nullable=True)
 
     customer_id = Column(Integer, ForeignKey("customers.id"), nullable=False)
