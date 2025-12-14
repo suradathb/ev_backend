@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
+from decimal import Decimal
 
 class VehicleBase(BaseModel):
     vin: Optional[str] = None
@@ -9,7 +10,7 @@ class VehicleBase(BaseModel):
     model: Optional[str] = None
     model_year: Optional[int] = None
     ev_type: Optional[str] = None
-    battery_capacity_kwh: Optional[int] = None
+    battery_capacity_kwh: Optional[Decimal] = None
     customer_id: int
 
 class VehicleCreate(VehicleBase):

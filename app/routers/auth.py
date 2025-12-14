@@ -1,5 +1,5 @@
 from datetime import timedelta
-
+from jose import JWTError, jwt
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
@@ -18,20 +18,25 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
 def get_user_by_username(db: Session, username: str):
     return db.query(User).filter(User.username == username).first()
 
+def get_current_user(
+    db: Session = Depends(get_db),
+    token: str = Depends(oauth2_scheme),
+):
+    try:
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        sub = payload.get("sub")
+        if sub is None:
+            raise HTTPException(status_code=401, detail="Invalid token")
+        user_id = int(sub)
+    except (JWTError, ValueError):
+        raise HTTPException(status_code=401, detail="Invalid token")
 
-def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)) -> User:
-    from app.core.security import decode_token
-
-    payload = decode_token(token)
-    if not payload:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
-    user_id: int = payload.get("sub")
-    if not user_id:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token payload")
     user = db.get(User, user_id)
-    if not user or not user.is_active:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Inactive user")
+    if not user or not getattr(user, "is_active", True):
+        raise HTTPException(status_code=401, detail="Invalid token")
+
     return user
+
 
 
 @router.post("/register", response_model=UserRead)
@@ -59,6 +64,8 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
     user = get_user_by_username(db, form_data.username)
     if not user or not verify_password(form_data.password, user.password_hash):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect username or password")
+
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-    token = create_access_token({"sub": user.id}, expires_delta=access_token_expires)
-    return Token(access_token=token)
+    token = create_access_token({"sub": str(user.id)}, expires_delta=access_token_expires)
+    return {"access_token": token, "token_type": "bearer"}
+

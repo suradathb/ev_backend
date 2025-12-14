@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey,Numeric
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 
@@ -15,7 +15,7 @@ class Vehicle(Base):
     model = Column(String(100), nullable=True)
     model_year = Column(Integer, nullable=True)
     ev_type = Column(String(20), nullable=True)  # BEV / PHEV / HEV
-    battery_capacity_kwh = Column(Integer, nullable=True)
+    battery_capacity_kwh = Column(Numeric(10, 2), nullable=True)  # 2 ตำแหน่งทศนิยม
 
     customer_id = Column(Integer, ForeignKey("customers.id"), nullable=False)
 
